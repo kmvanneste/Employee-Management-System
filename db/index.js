@@ -1,11 +1,12 @@
 var inquirer = require("inquirer");
 const cTable = require("console.table");
+const connection = require("./connection.js");
 
 //class DB
 //constructor to connection
 //find all managers
 //select statements
-
+runSearch();
 //write all queries to database
 function runSearch() {
   inquirer
@@ -100,15 +101,14 @@ function addEmployee() {
             message: "What is the employees last name?" 
         }
     ]).then(function(answer) {
-  //     var query = "SELECT position, song, year FROM top5000 WHERE ?";
-  //     connection.query(query, { artist: answer.artist }, function(err, res) {
-  //       for (var i = 0; i < res.length; i++) {
-  //         console.log("Position: " + res[i].position + " || Song: " + res[i].song + " || Year: " + res[i].year);
-  //       }
-  //       runSearch();
-  //     });
-  //   });
-})
+      var query = "INSERT INTO employee (first_name, last_name) VALUES ?";
+      connection.query(query, { firstName: answer.firstName }, { lastName: answer.lastName }, function(err, res) {
+        for (var i = 0; i < res.length; i++) {
+          console.log(`New Employee: ${res[i].firstName} ${res[i].lastName}`);
+        }
+        runSearch();
+      });
+    });
 }
 
 function addEmployeeRole() {
