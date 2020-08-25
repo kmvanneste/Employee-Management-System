@@ -11,7 +11,6 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected!"); 
-  //runSearch();
 });
 
+module.exports = connection;

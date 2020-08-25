@@ -1,6 +1,7 @@
 var inquirer = require("inquirer");
 const cTable = require("console.table");
 const connection = require("./connection.js");
+var mysql = require("mysql");
 
 //class DB
 //constructor to connection
@@ -15,12 +16,12 @@ function runSearch() {
       type: "rawlist",
       message: "What would you like to do?",
       choices: [
-        "Add Employee Department",
-        "Add Employee",
-        "Add Employee Role",
         "View All Departments",
         "View All Employees",
         "View All Roles",
+        "Add Employee Department",
+        "Add Employee",
+        "Add Employee Role",
         "Update Employee Role",
       ],
     })
@@ -93,18 +94,31 @@ function addEmployee() {
         {
             name: "firstName",
             type: "input",
-            message: "What is the employees first name?",
+            message: "What is the employee's first name?",
         },
         {
             name: "lastName",
             type: "input",
-            message: "What is the employees last name?" 
+            message: "What is the employee's last name?" 
+        },
+        {
+            name: "roleID",
+            type: "input",
+            message: "What is the employee's role ID?" 
+        },
+        {
+            name: "manID",
+            type: "list",
+            message: "What is your manager ID?", 
+            choices: [1, 2, 3]
         }
+
     ]).then(function(answer) {
-      var query = "INSERT INTO employee (first_name, last_name) VALUES ?";
-      connection.query(query, { firstName: answer.firstName }, { lastName: answer.lastName }, function(err, res) {
+      var query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+      connection.query(query, [answer.firstName, answer.lastName, answer.roleID, answer.manID], function(err, res) {
+        if (err) throw (err);
         for (var i = 0; i < res.length; i++) {
-          console.log(`New Employee: ${res[i].firstName} ${res[i].lastName}`);
+          console.log(`New Employee: ${res[i].firstName} ${res[i].lastName} ${res[i].roleID} ${res[i].manID}`);
         }
         runSearch();
       });
