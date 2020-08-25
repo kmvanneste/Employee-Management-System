@@ -37,16 +37,16 @@ function runSearch() {
           viewEmployees();
           break;
 
-        case "Add Employee Department":
-          addEmployeeDept();
+        case "Add Employee":
+          addEmployee();
           break;
 
         case "Add Employee Role":
           addEmployeeRole();
           break;
 
-        case "Add Employee":
-          addEmployee();
+        case "Add Employee Department":
+          addEmployeeDept();
           break;
 
         case "Update Employee Role":
@@ -57,44 +57,49 @@ function runSearch() {
 }
 
 function viewDepts() {
-    var query = "SELECT name FROM employees.department";
-    connection.query(query, function (err, res) {
-      for (var i = 0; i < res.length; i++) {
-        console.log(res[i].name);
-      }
-      runSearch();
-    });
-  }
-  
-  function viewEmployees() {
-    var query = "SELECT first_name, last_name FROM employees.employee";
-    connection.query(query, function (err, res) {
-      for (var i = 0; i < res.length; i++) {
-        console.log(`${res[i].first_name} ${res[i].last_name}`);
-      }
-      runSearch();
-    });
-  }
-  
-  function viewRoles() {
-    var query = "SELECT title FROM employees.role";
-    connection.query(query, function (err, res) {
-      for (var i = 0; i < res.length; i++) {
-        console.log(res[i].title);
-      }
-      runSearch();
-    });
-  }
+  var query = "SELECT name FROM employees.department";
+  connection.query(query, function (err, res) {
+    for (var i = 0; i < res.length; i++) {
+      console.log(res[i].name);
+    }
+    runSearch();
+  });
+}
 
-function addEmployeeDept() {
-  // inquirer
-  //   .prompt({
-  //     name: "addEmployeeDept",
-  //     type: "list",
-  //     message: "What department does this employee work in?",
-  //     choices: ["Sales", "Engineering", "HR", "IT"]
-  //   })
-  //   .then(function(answer) {
+function viewEmployees() {
+  var query = "SELECT first_name, last_name FROM employees.employee";
+  connection.query(query, function (err, res) {
+    for (var i = 0; i < res.length; i++) {
+      console.log(`${res[i].first_name} ${res[i].last_name}`);
+    }
+    runSearch();
+  });
+}
+
+function viewRoles() {
+  var query = "SELECT title FROM employees.role";
+  connection.query(query, function (err, res) {
+    for (var i = 0; i < res.length; i++) {
+      console.log(res[i].title);
+    }
+    runSearch();
+  });
+}
+
+function addEmployee() {
+  inquirer
+    .prompt([
+        {
+            name: "firstName",
+            type: "input",
+            message: "What is the employees first name?",
+        },
+        {
+            name: "lastName",
+            type: "input",
+            message: "What is the employees last name?" 
+        }
+    ]).then(function(answer) {
   //     var query = "SELECT position, song, year FROM top5000 WHERE ?";
   //     connection.query(query, { artist: answer.artist }, function(err, res) {
   //       for (var i = 0; i < res.length; i++) {
@@ -103,19 +108,20 @@ function addEmployeeDept() {
   //       runSearch();
   //     });
   //   });
+})
 }
 
 function addEmployeeRole() {
-    // var query = "SELECT first_name, last_name FROM employees.employee";
-    //     connection.query(query, function(err, res) {
-    //         for (var i = 0; i < res.length; i++) {
-    //             console.log(`${res[i].first_name} ${res[i].last_name}`);
-    //         }
-    //         runSearch();
-    //     });
-  }
+  // var query = "SELECT first_name, last_name FROM employees.employee";
+  //     connection.query(query, function(err, res) {
+  //         for (var i = 0; i < res.length; i++) {
+  //             console.log(`${res[i].first_name} ${res[i].last_name}`);
+  //         }
+  //         runSearch();
+  //     });
+}
 
-function addEmployee() {
+function addEmployeeDept() {
   //     var query = "SELECT artist FROM top5000 GROUP BY artist HAVING count(*) > 1";
   //     connection.query(query, function(err, res) {
   //       for (var i = 0; i < res.length; i++) {
@@ -169,8 +175,6 @@ function addEmployee() {
   //         });
   //       });
 }
-
-
 
 function updateEmployeeRole() {
   // var query = "SELECT first_name, last_name FROM employees.employee";
