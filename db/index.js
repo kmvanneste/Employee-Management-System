@@ -12,11 +12,11 @@ function runSearch() {
       message: "What would you like to do?",
       choices: [
         "View All Departments",
-        "View All Employees",
         "View All Roles",
-        "Add Employee Department",
+        "View All Employees",
+        "Add Department",
+        "Add Role",
         "Add Employee",
-        "Add Employee Role",
         "Update Employee Role",
       ],
     })
@@ -38,11 +38,11 @@ function runSearch() {
           addEmployee();
           break;
 
-        case "Add Employee Role":
+        case "Add Role":
           addRole();
           break;
 
-        case "Add Employee Department":
+        case "Add Department":
           addDept();
           break;
 
@@ -153,13 +153,13 @@ function addDept() {
     inquirer
     .prompt([
         {
-            name: "department",
+            name: "departmentName",
             type: "input",
-            message: "What is the name of the new department?",
+            message: "What is the name of the department you would like to add?",
         },
     ]).then(function(answer) {
-      var query = "INSERT INTO department (name) VALUES (?)";
-      connection.query(query, [answer.deparment], function(err, res) {
+      var query = "INSERT INTO department (name) VALUE ('?')" ;
+      connection.query(query, [answer.deparmentName], function(err, res) {
         if (err) throw (err);
         for (var i = 0; i < res.length; i++) {
           console.table(`New Department: ${res[i].department}`);
