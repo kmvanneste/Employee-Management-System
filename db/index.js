@@ -157,7 +157,6 @@ function addRole() {
       )}
     )}
 
-
 function addDept() {
   inquirer
     .prompt([
@@ -178,26 +177,8 @@ function addDept() {
 }
 
 function updateEmployeeRole() {
-  //ask the user what employee they want to update
-
-  //pull that employees data
-//   let currentEmployees = [];
-//   var query = "SELECT first_name, last_name, id FROM employee";
-//   connection.query(query, function (err, res) {
-//     if (err) throw err;
-//     for (var i = 0; i < res.length; i++) {
-//       currentEmployees.push(res[i].first_Name + " " + res[i].last_Name + " id:" + res[i].id);
-//     }
-//     console.log(currentEmployees);
-//   });
   inquirer
     .prompt([
-    //   {
-    //     name: "currentEmployee",
-    //     type: "list",
-    //     message: "Which employee would you like to update?",
-    //     choices: currentEmployees
-    //   },
       {
         name: "currentEmployeeID",
         type: "input",
@@ -225,6 +206,7 @@ function updateEmployeeRole() {
           connection.query(query, [answer.newRoleTitle, answer.newRoleSalary, answer.newRoleDeptID, parseInt(answer.currentEmployeeID)], function(err, res) {
             if (err) throw (err);
             console.log("Successful Update!");
+            runSearch();
             })
         }
 )}
