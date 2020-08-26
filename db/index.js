@@ -3,7 +3,6 @@ const cTable = require("console.table");
 const connection = require("./connection.js");
 var mysql = require("mysql");
 
-runSearch();
 function runSearch() {
   inquirer
     .prompt({
@@ -116,12 +115,8 @@ function addEmployee() {
         [answer.firstName, answer.lastName, answer.roleID, answer.manID],
         function (err, res) {
           if (err) throw err;
-          for (var i = 0; i < res.length; i++) {
-            console.log(
-              `New Employee: ${res[i].firstName} ${res[i].lastName} ${res[i].roleID} ${res[i].manID}`
-            );
-          }
-          runSearch();
+            console.log(`Successfully Added Employee: ${answer.firstName} ${answer.lastName}`);
+            runSearch();
         }
       );
     });
@@ -156,7 +151,7 @@ function addRole() {
         [answer.title, answer.salary, answer.departmentID],
         function (err, res) {
           if (err) throw err;
-            console.log(`New Role successfully created!`);
+            console.log(`Successfully Added Role: ${answer.title}`);
             runSearch();
           }
       )}
@@ -176,7 +171,7 @@ function addDept() {
       var query = "INSERT INTO department (name) VALUE (?)";
       connection.query(query, answer.departmentName, function (err, res) {
         if (err) throw err;
-        console.log(`New department created!`);
+        console.log(`Successfully Added Department: ${answer.departmentName}`);
         runSearch();
       });
     });
@@ -229,7 +224,7 @@ function updateEmployeeRole() {
       var query = "UPDATE role SET title = ?, salary = ?, department_id = ? WHERE id = ?";
           connection.query(query, [answer.newRoleTitle, answer.newRoleSalary, answer.newRoleDeptID, parseInt(answer.currentEmployeeID)], function(err, res) {
             if (err) throw (err);
-            console.log("successful update!");
+            console.log("Successful Update!");
             })
         }
 )}
@@ -237,3 +232,5 @@ function updateEmployeeRole() {
 function exit() {
     process.exit(); 
 }
+
+module.exports = runSearch;
