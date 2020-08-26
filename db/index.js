@@ -156,16 +156,12 @@ function addRole() {
         [answer.title, answer.salary, answer.departmentID],
         function (err, res) {
           if (err) throw err;
-          for (var i = 0; i < res.length; i++) {
-            console.table(
-              `New Role: ${res[i].title} ${res[i].salary} ${res[i].departmentID}`
-            );
+            console.log(`New Role successfully created!`);
+            runSearch();
           }
-          runSearch();
-        }
-      );
-    });
-}
+      )}
+    )}
+
 
 function addDept() {
   inquirer
@@ -177,12 +173,10 @@ function addDept() {
       },
     ])
     .then(function (answer) {
-      var query = "INSERT INTO department (name) VALUE ('?')";
-      connection.query(query, [answer.deparmentName], function (err, res) {
+      var query = "INSERT INTO department (name) VALUE (?)";
+      connection.query(query, answer.departmentName, function (err, res) {
         if (err) throw err;
-        for (var i = 0; i < res.length; i++) {
-          console.table(`New Department: ${res[i].department}`);
-        }
+        console.log(`New department created!`);
         runSearch();
       });
     });
