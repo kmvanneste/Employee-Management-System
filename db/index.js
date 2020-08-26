@@ -18,6 +18,7 @@ function runSearch() {
         "Add Role",
         "Add Employee",
         "Update Employee Role",
+        "Quit",
       ],
     })
     .then(function (answer) {
@@ -49,6 +50,10 @@ function runSearch() {
         case "Update Employee Role":
           updateEmployeeRole();
           break;
+
+        case "Exit":
+          exit();
+          break;
       }
     });
 }
@@ -62,15 +67,17 @@ function viewDepts() {
 }
 
 function viewEmployees() {
-  var query = "SELECT employee.first_name, employee.last_name, role.title FROM employee, role WHERE employee.id = role.id;";
+  var query =
+    "SELECT employee.first_name, employee.last_name, role.title FROM employee, role WHERE employee.id = role.id;";
   connection.query(query, function (err, res) {
-      console.table(res);
-      runSearch();
+    console.table(res);
+    runSearch();
   });
 }
 
 function viewRoles() {
-  var query = "SELECT role.title, role.salary, department.name FROM role, department WHERE department.id = role.department_id;";
+  var query =
+    "SELECT role.title, role.salary, department.name FROM role, department WHERE department.id = role.department_id;";
   connection.query(query, function (err, res) {
     console.table(res);
     runSearch();
@@ -80,81 +87,99 @@ function viewRoles() {
 function addEmployee() {
   inquirer
     .prompt([
-        {
-            name: "firstName",
-            type: "input",
-            message: "What is the employee's first name?",
-        },
-        {
-            name: "lastName",
-            type: "input",
-            message: "What is the employee's last name?" 
-        },
-        {
-            name: "roleID",
-            type: "input",
-            message: "What is the employee's role ID?" 
-        },
-        {
-            name: "manID",
-            type: "input",
-            message: "What is your manager ID?"
+      {
+        name: "firstName",
+        type: "input",
+        message: "What is the employee's first name?",
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "What is the employee's last name?",
+      },
+      {
+        name: "roleID",
+        type: "input",
+        message: "What is the employee's role ID?",
+      },
+      {
+        name: "manID",
+        type: "input",
+        message: "What is your manager ID?",
+      },
+    ])
+    .then(function (answer) {
+      var query =
+        "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+      connection.query(
+        query,
+        [answer.firstName, answer.lastName, answer.roleID, answer.manID],
+        function (err, res) {
+          if (err) throw err;
+          for (var i = 0; i < res.length; i++) {
+            console.log(
+              `New Employee: ${res[i].firstName} ${res[i].lastName} ${res[i].roleID} ${res[i].manID}`
+            );
+          }
+          runSearch();
         }
-    ]).then(function(answer) {
-      var query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
-      connection.query(query, [answer.firstName, answer.lastName, answer.roleID, answer.manID], function(err, res) {
-        if (err) throw (err);
-        for (var i = 0; i < res.length; i++) {
-          console.log(`New Employee: ${res[i].firstName} ${res[i].lastName} ${res[i].roleID} ${res[i].manID}`);
-        }
-        runSearch();
-      });
+      );
     });
 }
 
 function addRole() {
-    inquirer
+  inquirer
     .prompt([
-        {
-            name: "title",
-            type: "input",
-            message: "What is the title of the new role?",
-        },
-        {
-            name: "salary",
-            type: "input",
-            message: "What is the salary?" 
-        },
-        {
-            name: "departmentID",
-            type: "input",
-            message: "What is the Department ID for this new role? Please select 1 for sales, 2 for engineering, 3 for accounting, 4 for law.",
-            choices: [1, 2, 3, 4] 
-        },
-    ]).then(function(answer) {
-      var query = "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
-      connection.query(query, [answer.title, answer.salary, answer.departmentID], function(err, res) {
-        if (err) throw (err);
-        for (var i = 0; i < res.length; i++) {
-          console.table(`New Role: ${res[i].title} ${res[i].salary} ${res[i].departmentID}`);
+      {
+        name: "title",
+        type: "input",
+        message: "What is the title of the new role?",
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "What is the salary?",
+      },
+      {
+        name: "departmentID",
+        type: "input",
+        message:
+          "What is the Department ID for this new role? Please select 1 for sales, 2 for engineering, 3 for accounting, 4 for law.",
+        choices: [1, 2, 3, 4],
+      },
+    ])
+    .then(function (answer) {
+      var query =
+        "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
+      connection.query(
+        query,
+        [answer.title, answer.salary, answer.departmentID],
+        function (err, res) {
+          if (err) throw err;
+          for (var i = 0; i < res.length; i++) {
+            console.table(
+              `New Role: ${res[i].title} ${res[i].salary} ${res[i].departmentID}`
+            );
+          }
+          runSearch();
         }
-        runSearch();
-      });
+      );
     });
 }
 
 function addDept() {
-    inquirer
+  inquirer
     .prompt([
-        {
-            name: "departmentName",
-            type: "input",
-            message: "What is the name of the department you would like to add?",
-        },
-    ]).then(function(answer) {
-      var query = "INSERT INTO department (name) VALUE ('?')" ;
-      connection.query(query, [answer.deparmentName], function(err, res) {
-        if (err) throw (err);
+      {
+        name: "departmentName",
+        type: "input",
+        message: "What is the name of the department you would like to add?",
+      },
+    ])
+    .then(function (answer) {
+      var query = "INSERT INTO department (name) VALUE ('?')";
+      connection.query(query, [answer.deparmentName], function (err, res) {
+        if (err) throw err;
         for (var i = 0; i < res.length; i++) {
           console.table(`New Department: ${res[i].department}`);
         }
@@ -164,25 +189,38 @@ function addDept() {
 }
 
 function updateEmployeeRole() {
-   //ask the user what employee they want to update
+  //ask the user what employee they want to update
 
-   //pull that employees data
-
-   //update that employees role
-    inquirer
+  //pull that employees data
+  let currentEmployees = [];
+  var query = "SELECT first_name, last_name FROM employee";
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    for (var i = 0; i < res.length; i++) {
+      currentEmployees.push(res[i].firstName + " " + res[i].lastName);
+    }
+    console.log(currentEmployees);
+  });
+  inquirer
     .prompt([
-        {
-            name: "",
-            type: "input",
-            message: "What is the name of the department you would like to add?",
-        },
-    ]).then(function(answer) {
-  // var query = "SELECT first_name, last_name FROM employees.employee";
-  //     connection.query(query, function(err, res) {
-  //         for (var i = 0; i < res.length; i++) {
-  //             console.log(`${res[i].first_name} ${res[i].last_name}`);
-  //         }
-  //         runSearch();
-  //     });
-})
+      {
+        name: "currentEmployees",
+        type: "input",
+        message: "Which employee would you like to update?",
+        choices: currentEmployees
+      },
+    ])
+    .then(function (answer) {
+      var query = "SELECT ??,  FROM employees.employee";
+          connection.query(query, function(err, res) {
+              for (var i = 0; i < res.length; i++) {
+                  console.log(`${res[i].first_name} ${res[i].last_name}`);
+              }
+              runSearch();
+          });
+    });
+}
+
+function exit() {
+    process.exit(); 
 }
