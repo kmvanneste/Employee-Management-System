@@ -144,7 +144,7 @@ function addRole() {
         name: "departmentID",
         type: "input",
         message:
-          "What is the Department ID for this new role? Please select 1 for sales, 2 for engineering, 3 for accounting, 4 for law.",
+          "What is the Department ID for this new role? Please select 1 for Sales, 2 for Engineering, 3 for Finance, 4 for Legal.",
         choices: [1, 2, 3, 4],
       },
     ])
@@ -192,34 +192,53 @@ function updateEmployeeRole() {
   //ask the user what employee they want to update
 
   //pull that employees data
-  let currentEmployees = [];
-  var query = "SELECT first_name, last_name FROM employee";
-  connection.query(query, function (err, res) {
-    if (err) throw err;
-    for (var i = 0; i < res.length; i++) {
-      currentEmployees.push(res[i].firstName + " " + res[i].lastName);
-    }
-    console.log(currentEmployees);
-  });
+//   let currentEmployees = [];
+//   var query = "SELECT first_name, last_name, id FROM employee";
+//   connection.query(query, function (err, res) {
+//     if (err) throw err;
+//     for (var i = 0; i < res.length; i++) {
+//       currentEmployees.push(res[i].first_Name + " " + res[i].last_Name + " id:" + res[i].id);
+//     }
+//     console.log(currentEmployees);
+//   });
   inquirer
     .prompt([
+    //   {
+    //     name: "currentEmployee",
+    //     type: "list",
+    //     message: "Which employee would you like to update?",
+    //     choices: currentEmployees
+    //   },
       {
-        name: "currentEmployees",
+        name: "currentEmployeeID",
         type: "input",
-        message: "Which employee would you like to update?",
-        choices: currentEmployees
+        message: "What is the ID of the employee you would like update?",
+      },
+      {
+        name: "newRoleTitle",
+        type: "input",
+        message: "What is the title of their new role?",
+      },
+      {
+        name: "newRoleSalary",
+        type: "input",
+        message: "What is their new salary?",
+      },
+      {
+        name: "newRoleDeptID",
+        type: "list",
+        message: "What department will they belong to? Select 1 for Sales, 2 for Engineering, 3 for Finance, 4 for Legal.",
+        choices: [1, 2, 3, 4]
       },
     ])
-    .then(function (answer) {
-      var query = "SELECT ??,  FROM employees.employee";
-          connection.query(query, function(err, res) {
-              for (var i = 0; i < res.length; i++) {
-                  console.log(`${res[i].first_name} ${res[i].last_name}`);
-              }
-              runSearch();
-          });
-    });
-}
+    .then(function(answer) {
+      var query = "UPDATE role SET title = ?, salary = ?, department_id = ? WHERE id = ?";
+          connection.query(query, [answer.newRoleTitle, answer.newRoleSalary, answer.newRoleDeptID, parseInt(answer.currentEmployeeID)], function(err, res) {
+            if (err) throw (err);
+            console.log("successful update!");
+            })
+        }
+)}
 
 function exit() {
     process.exit(); 
