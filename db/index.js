@@ -54,31 +54,25 @@ function runSearch() {
 }
 
 function viewDepts() {
-  var query = "SELECT name FROM employees.department";
+  var query = "SELECT name, id FROM employees.department ORDER BY id asc";
   connection.query(query, function (err, res) {
-    for (var i = 0; i < res.length; i++) {
-      console.table(res[i].name);
-    }
+    console.table(res);
     runSearch();
   });
 }
 
 function viewEmployees() {
-  var query = "SELECT first_name, last_name FROM employees.employee";
+  var query = "SELECT employee.first_name, employee.last_name, role.title FROM employee, role WHERE employee.id = role.id;";
   connection.query(query, function (err, res) {
-    for (var i = 0; i < res.length; i++) {
-      console.table(`${res[i].first_name} ${res[i].last_name}`);
-    }
-    runSearch();
+      console.table(res);
+      runSearch();
   });
 }
 
 function viewRoles() {
-  var query = "SELECT title FROM employees.role";
+  var query = "SELECT role.title, role.salary, department.name FROM role, department WHERE department.id = role.department_id;";
   connection.query(query, function (err, res) {
-    for (var i = 0; i < res.length; i++) {
-      console.table(res[i].title);
-    }
+    console.table(res);
     runSearch();
   });
 }
@@ -170,6 +164,19 @@ function addDept() {
 }
 
 function updateEmployeeRole() {
+   //ask the user what employee they want to update
+
+   //pull that employees data
+
+   //update that employees role
+    inquirer
+    .prompt([
+        {
+            name: "",
+            type: "input",
+            message: "What is the name of the department you would like to add?",
+        },
+    ]).then(function(answer) {
   // var query = "SELECT first_name, last_name FROM employees.employee";
   //     connection.query(query, function(err, res) {
   //         for (var i = 0; i < res.length; i++) {
@@ -177,4 +184,5 @@ function updateEmployeeRole() {
   //         }
   //         runSearch();
   //     });
+})
 }
