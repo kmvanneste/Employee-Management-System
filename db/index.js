@@ -170,7 +170,7 @@ function addDept() {
       var query = "INSERT INTO department (name) VALUE (?)";
       connection.query(query, answer.departmentName, function (err, res) {
         if (err) throw err;
-        console.log(`Successfully Added Department: ${answer.departmentName}`);
+        console.log(`Successfully Added Department!`);
         runSearch();
       });
     });
